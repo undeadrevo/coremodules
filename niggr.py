@@ -12,7 +12,7 @@ def search(code, input):
         url = input.group(2)
         niggurl = requests.get(apiurl + url)
 
-        return code.say('Shortened URL: %s' % niggurl)
+        return code.say('Shortened URL: %s' % niggurl.text())
     except Exception as e:
         output.error('Error in nigurl.py: %s' % str(e))
         return code.say('{b}Unable to shorten %s{b}' % input.group(2))
