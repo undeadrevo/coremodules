@@ -17,6 +17,7 @@ MODULE = "words"
 SLURS = []
 WORDS = []
 
+regex = re.compile("\x1f|\x02|\x12|\x0f|\x16|\x03(?:\d{1,2}(?:,\d{1,2})?)?", re.UNICODE)
 
 def setup(code):
     global BANNED_WORDS
@@ -65,12 +66,12 @@ def add_word(code, input):
         return code.reply("Woah man, that's really long!")
 
     for w in WORDS:
-        if w["word"].strip("\\") == word:
+        if w["word"] == word:
             return code.reply("I already know that word!")
 
     w = {"word": word, "time": time.time(), "who": input.nick}
 
-    WORDS.append(w.strip("\\"))
+    WORDS.append(regex.sub("", w))
     WORDS = list(set(WORDS))
     save_words()
     return code.reply("Added!")
@@ -87,7 +88,7 @@ def ban_word(code, input):
 
     delete_word(code, input)
 
-    BANNED_WORDS.append(word.strip("\\"))
+    BANNED_WORDS.append(regex.sub("", word))
     WORDS = list(set(WORDS))
     save_words()
     return code.reply("Word banned.")
@@ -103,7 +104,7 @@ def unban_word(code, input):
         return code.reply("Please provide a word")
 
     if word in BANNED_WORDS:
-        BANNED_WORDS.remove(word)
+        BANNED_WORDS.remove(regex.sub("", word))
         WORDS = list(set(WORDS))
         save_words()
         return code.reply("Word unbanned.")
@@ -122,7 +123,7 @@ def delete_word(code, input):
 
     for w in WORDS:
         if w["word"] == word:
-            WORDS.remove(w)
+            WORDS.remove(regex.sub("", w))
             WORDS = list(set(WORDS))
             save_words()
             return code.reply("Word removed.")
