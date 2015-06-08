@@ -2,6 +2,7 @@ from util.hook import *
 from util import database
 import random
 import time
+import re
 
 
 __author__ = "cr5315"
